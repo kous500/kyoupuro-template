@@ -96,6 +96,22 @@ double rand_normal(double n, double m) {
     return distribution(gen);
 }
 
+ll ibs(ll min_ng, ll max_ok, function<bool(ll)> is_ok) {
+    while (abs(max_ok - min_ng) > 1) {
+        ll mid = (max_ok + min_ng) / 2;
+        if (is_ok(mid)) max_ok = mid;
+        else min_ng = mid;
+    }
+    return max_ok;
+}
+double fbs(double left, double right, function<bool(double)> is_ok) {
+    while (abs(right - left) > 1e-9) {
+        double mid = (right + left) / 2;
+        if (is_ok(mid)) right = mid;
+        else left = mid;
+    }
+    return left;
+}
 template<class T> T three_part_search(T left, T right, function<T(T)> f) {
     while (abs(right - left) > 1e-9) {
         T mid1 = left + (right - left) / 3;
@@ -104,29 +120,6 @@ template<class T> T three_part_search(T left, T right, function<T(T)> f) {
         else left = mid1;
     }
     return left;
-}
-
-int binary_search(vector<int> a, int key) {
-    int left = 0, right = (int)a.size() - 1; // 配列 a の左端と右端
-    while (right >= left) {
-        int mid = left + (right - left) / 2; // 区間の真ん中
-        if (a[mid] == key) return mid;
-        else if (a[mid] > key) right = mid - 1;
-        else if (a[mid] < key) left = mid + 1;
-    }
-    return -1;
-}
-
-int lower_binary_search(vector<int> a, int key) {
-    auto isOK = [](int index, int key) { return true; };
-
-    int ng = -1, ok = (int)a.size();
-    while (abs(ok - ng) > 1) {
-        int mid = (ok + ng) / 2;
-        if (isOK(mid, key)) ok = mid;
-        else ng = mid;
-    }
-    return ok;
 }
 
 template<class T> vector<T> coordinate_compression(vector<T>& a) {
