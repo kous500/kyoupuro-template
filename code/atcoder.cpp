@@ -22,12 +22,12 @@
 #define VC(v, n) Vc v(n); input(v)
 #define VB(v, n) Vb v(n); input(v)
 #define VD(v, n) Vd v(n); input(v)
-#define VVI(v, n, m) V<Vi> v(n, Vi(m)); input(v)
-#define VVL(v, n, m) V<Vl> v(n, Vl(m)); input(v)
-#define VVS(v, n, m) V<Vs> v(n, Vs(m)); input(v)
-#define VVC(v, n, m) V<Vc> v(n, Vc(m)); input(v)
-#define VVB(v, n, m) V<Vb> v(n, Vb(m)); input(v)
-#define VVD(v, n, m) V<Vd> v(n, Vd(m)); input(v)
+#define VVI(v, n, m) VVi v(n, Vi(m)); input(v)
+#define VVL(v, n, m) VVl v(n, Vl(m)); input(v)
+#define VVS(v, n, m) VVs v(n, Vs(m)); input(v)
+#define VVC(v, n, m) VVc v(n, Vc(m)); input(v)
+#define VVB(v, n, m) VVb v(n, Vb(m)); input(v)
+#define VVD(v, n, m) VVd v(n, Vd(m)); input(v)
 
 #define all(i) begin(i),end(i)
 #define rall(i) rbegin(i),rend(i)
@@ -36,19 +36,19 @@
 using namespace std;
 using namespace atcoder;
 
+using ll = long long;
 template<class T> using Pque = priority_queue<T>;
 template<class T> using Pqueg = priority_queue<T, vector<T>, greater<T>>;
 template<class T> using P = pair<T, T>;
 template<class T> using V = vector<T>;
 template<class T> using VV = V<V<T>>;
 template<class T> using VVV = V<V<V<T>>>;
-using ll = long long;
-using Vi = V<int>;
-using Vl = V<ll>;
-using Vs = V<string>;
-using Vc = V<char>;
-using Vb = V<bool>;
-using Vd = V<double>;
+using Vi = V<int>; using VVi = VV<int>; using VVVi = VVV<int>;
+using Vl = V<ll>; using VVl = VV<ll>; using VVVl = VVV<ll>;
+using Vs = V<string>; using VVs = VV<string>; using VVVs = VVV<string>;
+using Vc = V<char>; using VVc = VV<char>; using VVVc = VVV<char>;
+using Vb = V<bool>; using VVb = VV<bool>; using VVVb = VVV<bool>;
+using Vd = V<double>; using VVd = VV<double>; using VVVd = VVV<double>;
 
 const int INF = 1e9;
 const ll INF_l = 1e18;
