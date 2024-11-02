@@ -1,24 +1,37 @@
 # [index](index) > 累積和
 
 ```cpp
-template<class T> struct Consum {
-    V<T> sum;
-        
-    Consum(V<T> &v) : sum(v.size() + 1) {
-        rep(i, v.size()) sum[i + 1] = sum[i] + v[i];
+template<class T> class CumulativeSum {
+  public:
+    CumulativeSum() : _sum(1) {}
+    CumulativeSum(std::vector<T> &v) : _sum(v.size() + 1) {
+        for (int i = 0; i < v.size(); i++) {
+            _sum[i + 1] = _sum[i] + v[i];
+        }
     }
 
-    T opensum(int l, int r) {
-        return sum[r + 1] - sum[l];
+    //get sum of [l, r]
+    long long sum(int l, int r) {
+        assert(l <= r + 1);
+        assert(0 <= l && r + 1 < _sum.size());
+        return _sum[r + 1] - _sum[l];
     }
 
-    T halfsum(int l, int r) {
-        return sum[r] - sum[l];
+    //get sum of [l, r)
+    long long halfsum(int l, int r) {
+        assert(l <= r);
+        assert(0 <= l && r < _sum.size());
+        return _sum[r] - _sum[l];
     }
+
+  private:
+    std::vector<long long> _sum;
 };
 ```
 
-入力配列を受け取り、累積和を計算して初期化します。
+### CumulativeSum
 
-- **T opensum(int l, int r)**: 閉区間 `[l, r]` の和を返します。インデックス `l` から `r` までの要素の和を計算します。
-- **T halfsum(int l, int r)**: 半開区間 `[l, r)` の和を返します。インデックス `l` から `r-1` までの要素の和を計算します。
+入力配列を受け取り、その累積和をあらかじめ計算します。
+
+- **sum(int l, int r)**: 閉区間 `[l, r]` （インデックス `l` から `r` まで）の要素の和を計算します。
+- **halfsum(int l, int r)**: 半開区間 `[l, r)` （インデックス `l` から `r-1` まで）の要素の和を計算します。
