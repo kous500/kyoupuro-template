@@ -10,13 +10,22 @@ template<class T> class CumulativeSum {
         }
     }
 
+    //get sum of [0, r]
+    long long sum(int r) {
+        assert(0 <= r && r + 1 < _sum.size());
+        return _sum[r + 1];
+    }
     //get sum of [l, r]
     long long sum(int l, int r) {
         assert(l <= r + 1);
         assert(0 <= l && r + 1 < _sum.size());
         return _sum[r + 1] - _sum[l];
     }
-
+    //get sum of [0, r)
+    long long halfsum(int r) {
+        assert(0 <= r && r < _sum.size());
+        return _sum[r];
+    }
     //get sum of [l, r)
     long long halfsum(int l, int r) {
         assert(l <= r);
