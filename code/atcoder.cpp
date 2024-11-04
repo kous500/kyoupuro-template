@@ -1,3 +1,9 @@
+#ifdef ONLINE_JUDGE
+#pragma GCC target("avx2")
+#pragma GCC optimize("O3")
+#pragma GCC optimize("unroll-loops")
+#endif
+
 #include <bits/stdc++.h>
 #include<atcoder/all>
 #define overload4(a, b, c, d, e, ...) e
