@@ -1,4 +1,4 @@
-# [index](index) > 座標圧縮
+# [index](index.md) > 座標圧縮
 
 ```cpp
 template<class T> class CoordinateCompression {

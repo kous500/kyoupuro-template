@@ -1,25 +1,26 @@
 # 競技プログラミングメモ
 
 ## データ操作
-- [累積和](consum)
-- [座標圧縮](cc)
+- [累積和](consum.md)
+- [座標圧縮](cc.md)
 
 ## データ構造・探索
-- [２分探索](bs)
-- [動的計画法](dp)
-- [セグ木](segtree)
-- [グラフ](graph)
-- [UnionFind](uf)
-- [方向配列](direc)
+- [２分探索](bs.md)
+- [動的計画法](dp.md)
+- [セグ木](segtree.md)
+- [グラフ](graph.md)
+- [UnionFind](uf.md)
+- [方向配列](direc.md)
 
 ## 文字列
-- [正規表現](regex)
-- [大文字小文字](uplow)
+- [正規表現](regex.md)
+- [大文字小文字](uplow.md)
 
 ## 数学
-- [最大公約数・最小公倍数](gcd)
-- [繰り上げ除算](ceildiv)
-- [行列](matrix)
+- [最大公約数・最小公倍数](gcd.md)
+- [エラトステネスの篩](eratosthenes.md)
+- [繰り上げ除算](ceildiv.md)
+- [行列](matrix.md)
 
 ## ヒューリスティック
-- [乱数生成](rundom)
+- [乱数生成](rundom.md)

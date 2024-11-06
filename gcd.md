@@ -1,4 +1,4 @@
-# [index](index) > 最大公約数・最小公倍数
+# [index](index.md) > 最大公約数・最小公倍数
 
 ```cpp
 ll gcd(ll a, ll b) {

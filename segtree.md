@@ -1,4 +1,4 @@
-# [index](index) > セグ木
+# [index](index.md) > セグ木
 
 ## テンプレート
 

@@ -1,4 +1,4 @@
-# [index](index) > 方向配列
+# [index](index.md) > 方向配列
 
 ## 4方向移動
 

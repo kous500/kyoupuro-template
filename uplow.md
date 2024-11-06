@@ -1,4 +1,4 @@
-# [index](index) > 大文字小文字
+# [index](index.md) > 大文字小文字
 
 ## 小文字へ
 

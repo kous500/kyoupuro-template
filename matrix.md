@@ -1,4 +1,4 @@
-# [index](index) > 行列
+# [index](index.md) > 行列
 
 ## 行列累乗
 

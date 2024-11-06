@@ -1,4 +1,4 @@
-# [index](index) > 動的計画法
+# [index](index.md) > 動的計画法
 
 ## 汎用DP
 
