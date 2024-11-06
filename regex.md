@@ -1,4 +1,4 @@
-# [index](index) > 正規表現
+# [index](index.md) > 正規表現
 
 ```cpp
 bool is_match(string s, string reg) {

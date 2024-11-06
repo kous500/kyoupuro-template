@@ -1,4 +1,4 @@
-# [index](index) > 乱数生成
+# [index](index.md) > 乱数生成
 
 ```cpp
 random_device rd;

@@ -1,4 +1,4 @@
-# [index](index) > UnionFind
+# [index](index.md) > UnionFind
 
 ```cpp
 struct UnionFind {

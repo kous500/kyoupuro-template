@@ -1,4 +1,4 @@
-# [index](index) > 累積和
+# [index](index.md) > 累積和
 
 ```cpp
 template<class T> class CumulativeSum {

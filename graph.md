@@ -1,4 +1,4 @@
-# [index](index) > グラフ
+# [index](index.md) > グラフ
 
 ```cpp
 struct DirectedGraph {

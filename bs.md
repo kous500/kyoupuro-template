@@ -1,4 +1,4 @@
-# [index](index) > ２分探索
+# [index](index.md) > ２分探索
 
 ## 整数の２分探索
 
