@@ -4,6 +4,7 @@
 - [累積和](consum.md)
 - [座標圧縮](cc.md)
 - [LIS](lis.md)
+- [ダブリング](doubling.md)
 
 ## データ構造・探索
 - [２分探索](bs.md)

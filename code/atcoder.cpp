@@ -45,7 +45,9 @@ using namespace atcoder;
 using ll = long long;
 template<class T> using Pque = priority_queue<T>;
 template<class T> using Pqueg = priority_queue<T, vector<T>, greater<T>>;
-template<class T> using P = pair<T, T>;
+template<class F, class S> using P = pair<F, S>;
+using Pi = P<int, int>;
+using Pl = P<ll, ll>;
 template<class T> using V = vector<T>;
 template<class T> using VV = V<V<T>>;
 template<class T> using VVV = V<V<V<T>>>;
@@ -64,11 +66,12 @@ template<typename F, typename S> std::istream& operator>>(istream& is, pair<F, S
 template<class... T> void input(T&... a) { (cin >> ... >> a); }
 
 template<typename T> std::ostream& operator<<(ostream& os, vector<T> v) { rep(i, v.size()) { os << v[i]; if (i < (int)v.size() - 1) os << ' '; }; return os; }
-template<typename F, typename S> std::ostream& operator<<(ostream& os, pair<F, S> p) { os << p.first << ' ' << p.second; return os; }
+template<typename F, typename S> std::ostream& operator<<(ostream& os, pair<F, S> p) { os << '[' << p.first << ' ' << p.second << ']'; return os; }
 void print() { cout << '\n'; }
 template<class T> void print(T a) { cout << a << '\n'; }
 template<class T, class... Ts> void print(const T& a, const Ts&... b) { cout << a; (cout << ... << (cout << ' ', b)); print(); }
 void fprint(double a) { cout << fixed << setprecision(15) << a << '\n'; }
+template<class T> void debug2d(VV<T> &v) { for (auto &r : v) rep(i, r.size()) cout << r[i] << (i == (int)r.size() - 1 ? "\n" : ", "); }
 void yesno(bool a) { cout << (string)(a ? "Yes\n" : "No\n"); }
 
 template<class... T> constexpr auto MIN(T... a) { return min(initializer_list{a...}); }
@@ -80,6 +83,6 @@ template<class T> ll sum(V<T> &v) { return accumulate(all(v), 0LL); }
 int main() {
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
-    
+
     
 }
