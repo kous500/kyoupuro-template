@@ -15,7 +15,7 @@ class Doubling {
         }
     }
 
-    int query(int idx, unsigned long long k) {
+    int query(int idx, unsigned long long k) const {
         assert(0 <= idx && idx < _doubling[0].size());
         assert(_log_max == 64 || k < (1ULL << _log_max));
 
@@ -49,7 +49,7 @@ template<class T> class DoublingMap {
         }
     }
 
-    T query(T idx, unsigned long long k) {
+    T query(T idx, unsigned long long k) const {
         assert(_doubling[0].count(idx));
         assert(_log_max == 64 || k < (1ULL << _log_max));
 

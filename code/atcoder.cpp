@@ -58,81 +58,31 @@ using Vc = V<char>; using VVc = VV<char>; using VVVc = VVV<char>;
 using Vb = V<bool>; using VVb = VV<bool>; using VVVb = VVV<bool>;
 using Vd = V<double>; using VVd = VV<double>; using VVVd = VVV<double>;
 
-const int INF = 1e9;
-const ll INF_l = 1e18;
+constexpr int INF = 1e9;
+constexpr ll INF_l = 1e18;
 
-template<typename T> std::istream& operator>>(istream& is, vector<T>& v) { for (T& in : v) is >> in; return is; }
-template<typename F, typename S> std::istream& operator>>(istream& is, pair<F, S>& p) { is >> p.first >> p.second; return is; }
-template<class... T> void input(T&... a) { (cin >> ... >> a); }
+template<typename T> inline std::istream& operator>>(istream& is, vector<T>& v) { for (T& in : v) is >> in; return is; }
+template<typename F, typename S> inline std::istream& operator>>(istream& is, pair<F, S>& p) { is >> p.first >> p.second; return is; }
+template<class... T> inline void input(T&... a) { (cin >> ... >> a); }
 
-template<typename T> std::ostream& operator<<(ostream& os, vector<T> v) { rep(i, v.size()) { os << v[i]; if (i < (int)v.size() - 1) os << ' '; }; return os; }
-template<typename F, typename S> std::ostream& operator<<(ostream& os, pair<F, S> p) { os << '[' << p.first << ' ' << p.second << ']'; return os; }
-void print() { cout << '\n'; }
-template<class T> void print(T a) { cout << a << '\n'; }
-template<class T, class... Ts> void print(const T& a, const Ts&... b) { cout << a; (cout << ... << (cout << ' ', b)); print(); }
+template<typename T> inline std::ostream& operator<<(ostream& os, vector<T> v) { rep(i, v.size()) { os << v[i]; if (i < (int)v.size() - 1) os << ' '; }; return os; }
+template<typename F, typename S> inline std::ostream& operator<<(ostream& os, pair<F, S> p) { os << '[' << p.first << ' ' << p.second << ']'; return os; }
+inline void print() { cout << '\n'; }
+template<class T> inline void print(T a) { cout << a << '\n'; }
+template<class T, class... Ts> inline void print(const T& a, const Ts&... b) { cout << a; (cout << ... << (cout << ' ', b)); print(); }
 void fprint(double a) { cout << fixed << setprecision(15) << a << '\n'; }
-template<class T> void debug2d(VV<T> &v) { for (auto &r : v) rep(i, r.size()) cout << r[i] << (i == (int)r.size() - 1 ? "\n" : ", "); }
-void yesno(bool a) { cout << (string)(a ? "Yes\n" : "No\n"); }
+template<class T> inline void debug2d(VV<T> &v) { for (auto &r : v) rep(i, r.size()) cout << r[i] << (i == (int)r.size() - 1 ? "\n" : ", "); }
+inline void yesno(bool a) { cout << (string)(a ? "Yes\n" : "No\n"); }
 
 template<class... T> constexpr auto MIN(T... a) { return min(initializer_list{a...}); }
 template<class... T> constexpr auto MAX(T... a) { return max(initializer_list{a...}); }
 template<class T> inline bool chmax(T& a, T b) { if (a < b) { a = b; return 1; } return 0; }
 template<class T> inline bool chmin(T& a, T b) { if (a > b) { a = b; return 1; } return 0; }
-template<class T> ll sum(V<T> &v) { return accumulate(all(v), 0LL); }
-
-template<unsigned mod> struct RollingHash {
-    vector<unsigned> hashed, power;
-
-    inline unsigned mul(unsigned a, unsigned b) const {
-        unsigned long long x = (unsigned long long) a * b;
-        unsigned xh = (unsigned) (x >> 32), xl = (unsigned) x, d, m;
-        //asm("divl %4; \n\t" : "=a" (d), "=d" (m) : "d" (xh), "a" (xl), "r" (mod));
-        return m;
-    }
-
-    RollingHash(const string &s, unsigned base = 10007) {
-        int sz = (int) s.size();
-        hashed.assign(sz + 1, 0);
-        power.assign(sz + 1, 0);
-        power[0] = 1;
-        for (int i = 0; i < sz; i++) {
-            power[i + 1] = mul(power[i], base);
-            hashed[i + 1] = mul(hashed[i], base) + s[i];
-            if (hashed[i + 1] >= mod) hashed[i + 1] -= mod;
-        }
-    }
-
-    unsigned get(int l, int r) const {
-        unsigned ret = hashed[r] + mod - mul(hashed[l], power[r - l]);
-        if (ret >= mod) ret -= mod;
-        return ret;
-    }
-
-    unsigned connect(unsigned h1, int h2, int h2len) const {
-        unsigned ret = mul(h1, power[h2len]) + h2;
-        if (ret >= mod) ret -= mod;
-        return ret;
-    }
-
-    int LCP(const RollingHash<mod> &b, int l1, int r1, int l2, int r2) {
-        int len = min(r1 - l1, r2 - l2);
-        int low = -1, high = len + 1;
-        while (high - low > 1) {
-            int mid = (low + high) / 2;
-            if (get(l1, l1 + mid) == b.get(l2, l2 + mid)) low = mid;
-            else high = mid;
-        }
-        return low;
-    }
-};
-
-using RH = RollingHash<1000000007>;
+template<class T> inline ll sum(V<T> &v) { return accumulate(all(v), 0LL); }
 
 int main() {
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
 
-    INT(n, q);
-    VI(a, n);
-    VI(b, n);
+    
 }

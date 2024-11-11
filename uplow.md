@@ -3,7 +3,7 @@
 ## 小文字へ
 
 ```cpp
-string to_lower(string s) {
+inline string to_lower(string s) {
     rep(i, s.size()) s[i] = tolower(s[i]);
     return s;
 }
@@ -12,7 +12,7 @@ string to_lower(string s) {
 ## 大文字へ
 
 ```cpp
-string to_upper(string s) {
+inline string to_upper(string s) {
     rep(i, s.size()) s[i] = toupper(s[i]);
     return s;
 }

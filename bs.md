@@ -3,7 +3,7 @@
 ## 整数の２分探索
 
 ```cpp
-ll ibs(ll min_ng, ll max_ok, function<bool(ll)> is_ok) {
+inline ll ibs(ll min_ng, ll max_ok, function<bool(ll)> is_ok) {
     while (abs(max_ok - min_ng) > 1) {
         ll mid = (max_ok + min_ng) / 2;
         if (is_ok(mid)) max_ok = mid;
@@ -22,7 +22,7 @@ ll ibs(ll min_ng, ll max_ok, function<bool(ll)> is_ok) {
 ## 実数の2分探索
 
 ```cpp
-double fbs(double left, double right, function<bool(double)> is_ok) {
+inline double fbs(double left, double right, function<bool(double)> is_ok) {
     while (abs(right - left) > 1e-9) {
         double mid = (right + left) / 2;
         if (is_ok(mid)) right = mid;
@@ -41,7 +41,7 @@ double fbs(double left, double right, function<bool(double)> is_ok) {
 ## 3分探索
 
 ```cpp
-template<class T> T three_part_search(T left, T right, function<T(T)> is_ok) {
+template<class T> inline T three_part_search(T left, T right, function<T(T)> is_ok) {
     while (abs(right - left) > 1e-9) {
         T mid1 = left + (right - left) / 3;
         T mid2 = right - (right - left) / 3;

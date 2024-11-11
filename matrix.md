@@ -3,13 +3,13 @@
 ## 行列累乗
 
 ```cpp
-template<class T> VV<T> matrixmul(VV<T> &a, VV<T> &b) {
+template<class T> inline VV<T> matrixmul(const VV<T> &a, const VV<T> &b) {
     VV<T> res(a.size(), V<T>(b[0].size()));
     rep(a.size()) rep(j, b[0].size()) rep(k, b.size()) res[i][j] += a[i][k] * b[k][j];
     return res;
 }
 
-template<class T> VV<T> matrixpow(VV<T> a, ll n) {
+template<class T> inline VV<T> matrixpow(VV<T> a, ll n) {
     VV<T> res(a.size(), V<T>(a.size()));
     rep(a.size()) res[i][i] = 1;
     while (n > 0) {
