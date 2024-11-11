@@ -20,7 +20,7 @@ struct UnionFind {
         par[rx] = ry;
     }
     
-    bool same(int x, int y) {
+    bool same(int x, int y) const {
         int rx = root(x);
         int ry = root(y);
         return rx == ry;

@@ -1,7 +1,7 @@
 # [index](index.md) > LIS
 
 ```cpp
-template<class T> std::vector<T> LIS(const std::vector<T> &v, bool broadly = false) {
+template<class T> inline std::vector<T> LIS(const std::vector<T> &v, bool broadly = false) {
     const int n = v.size();
     const std::pair<bool, T> inf = std::make_pair(true, T());
 

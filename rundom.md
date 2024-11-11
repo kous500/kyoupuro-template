@@ -4,12 +4,12 @@
 random_device rd;
 mt19937 gen(rd());
 
-template<class T> T rand_uniform(T mn, T mx) {
+template<class T> inline T rand_uniform(T mn, T mx) {
     uniform_int_distribution<T> distribution(mn, mx);
     return distribution(gen);
 }
 
-double rand_normal(double mn, double mx) {
+inline double rand_normal(double mn, double mx) {
     normal_distribution<> distribution(mn, mx);
     return distribution(gen);
 }

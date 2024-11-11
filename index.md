@@ -3,8 +3,6 @@
 ## データ操作
 - [累積和](consum.md)
 - [座標圧縮](cc.md)
-- [LIS](lis.md)
-- [ダブリング](doubling.md)
 
 ## データ構造・探索
 - [２分探索](bs.md)
@@ -13,6 +11,9 @@
 - [グラフ](graph.md)
 - [UnionFind](uf.md)
 - [方向配列](direc.md)
+- [LIS](lis.md)
+- [ダブリング](doubling.md)
+- [ハッシュ](hash.md)
 
 ## 文字列
 - [正規表現](regex.md)

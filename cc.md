@@ -13,10 +13,10 @@ template<class T> class CoordinateCompression {
         }
     }
 
-    int toId(T x) { return _mp[x]; }
-    T toValue(int x) { return _id[x]; }
-    std::vector<int> get() { return _v; }
-    int size() { return _id.size(); }
+    int toId(T x) const { return _mp[x]; }
+    T toValue(int x) const { return _id[x]; }
+    std::vector<int> get() const { return _v; }
+    int size() const { return _id.size(); }
 
   private:
     std::vector<T> _id;

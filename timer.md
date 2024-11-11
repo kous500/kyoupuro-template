@@ -2,9 +2,9 @@
 
 ```cpp
 struct Timer {
-    chrono::system_clock::time_point start;
+    const chrono::system_clock::time_point start;
     Timer() : start(chrono::system_clock::now()) {}
-    double get() {
+    double get() const {
         chrono::system_clock::time_point end = chrono::system_clock::now();
         chrono::duration<double> sec = end - start;
         return sec.count();
