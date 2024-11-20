@@ -1,75 +1,75 @@
 # [index](index.md) > 指数・対数
 
 ```cpp
-constexpr int floor_log2(const unsigned long long &a) { return 63 - std::countl_zero(a); }
-
-inline long long safe_pow(const long long &a, unsigned b) {
-    const bool is_negative = a < 0 && (b & 1);
-    unsigned long long res = 1, p = std::abs(a);
-    while (b > 0) {
-        if (floor_log2(res) + floor_log2(p) > 62) return is_negative ? LONG_LONG_MIN : LONG_LONG_MAX;
-        if (b & 1) res *= p;
-        if (p > 3037000499ULL && b >> 1) return is_negative ? LONG_LONG_MIN : LONG_LONG_MAX;
-        p *= p;
-        b >>= 1;
+inline long long fast_pow(long long base, unsigned exp) {
+    if (base != 0 && std::log2(std::abs(base)) * exp >= 63) {
+        return (base < 0 && (exp & 1)) ? LONG_LONG_MIN : LONG_LONG_MAX;
     }
-    if (res > LONG_LONG_MAX) return is_negative ? LONG_LONG_MIN : LONG_LONG_MAX;
-    return is_negative ? -res : res;
+    long long result = 1;
+    while (exp != 0) {
+        if (exp & 1) result *= base;
+        base *= base;
+        exp >>= 1;
+    }
+    return result;
 }
 
-inline long long floor_sqrt(const long long &a, const int &b = 2) {
-    assert(0 <= a && a < LONG_LONG_MAX);
-    assert(1 <= b);
-    
-    unsigned long long l = 0, r = a + 1;
+inline long long root_floor(const long long &value, const unsigned &degree = 2) {
+    unsigned long long l = 0, r = 1ULL << (62 / std::max(1U, degree) + 1);
     while (r - l > 1) {
-        long long m = (l + r) / 2;
-        if (safe_pow(m, b) <= a) l = m;
+        unsigned long long m = (l + r) / 2;
+        if (fast_pow(m, degree) <= value) l = m;
         else r = m;
     }
     return l;
 }
 ```
 
-### floor_log2($a$)
+### fast_pow($BASE$, $EXP$)
 
-- $\lfloor \log_2 a \rfloor$ を求めます。
-- ただし、$a = 0$ の場合は $-1$ を返します。
-- 計算量: $ O(\log {\log a})$
-- 制約: $0 \leq a \leq 2^{64}-1$
-
-### safe_pow($a$, $b$)
-
-- $a^b$ を求めます。
-- 結果が符号付き64bit整数の範囲を超える場合は、範囲内で最も近い値を返します。
+- ${BASE}^{EXP}$ を求めます。
+- 結果が `符号あり64bit整数` の範囲を超える場合は、範囲内で最も近い値を返します。
 - $0^0$ の場合は $1$ を返します。
-- 計算量: $ O(\log b)$
-- 制約: $-2^{63} \leq a \leq 2^{63}-1$ かつ $0 \leq b \leq 2^{32}-1$
+- 計算量: $ O(\log EXP)$
+- 安全な制約: $BASE$ は `符号あり64bit整数` かつ $EXP$ は `符号なし32bit整数`
+- 厳格な制約: ${BASE}^{EXP}$ が $0^0$ 以外かつ、 `符号あり64bit整数` の範囲内
 
-### floor_sqrt($a$, $b$)
+### root_floor($VALUE$, $DEGREE$)
 
-- $\lfloor \sqrt[a]{b} \rfloor$ を求めます。
-- 計算量: $ O(\log a \log b)$
-- 制約: $0 \leq a < 2^{63}-1$ かつ $1 \leq b \leq 2^{31}-1$
+- $\lfloor \sqrt[DEGREE]{VALUE} \rfloor$ を求めます。
+- $VALUE < 0$ の場合は $0$ 、 $DEGREE = 0$ の場合は $0$ または $2^{63}-1$ を返します。
+- 計算量: $ O(\log VALUE \times \log DEGREE)$
+- 安全な制約: $BASE$ は `符号あり64bit整数` かつ $EXP$ は `符号なし32bit整数`
+- 厳格な制約: $0 \leq BASE$ かつ $1 \leq DEGREE$
 
 ---
 
 ```cpp
-inline int floor_log(const unsigned long long &a, unsigned long long x) {
-    if (x <= 0) return INT_MIN;
-    if (a <= 1) return INT_MAX;
+constexpr int log2_floor(const unsigned long long &value) { return 63 - std::countl_zero(value); }
+
+inline int log_floor(const unsigned &base, unsigned long long value) {
+    assert(1 < base);
 
     int res = 0;
-    while (x >= a) {
-        x /= a;
+    while (value >= base) {
+        value /= base;
         res++;
     }
     return res;
 }
 ```
 
-### floor_log($a$, $x$)
+### log2_floor($VALUE$)
 
-- $\lfloor \log_a x \rfloor$ を求めます。
-- ただし、$x \leq 0$ の場合は $-2^{31}$ を、 $a \leq 1$ の場合は $2^{31}-1$ を返します。
-- 計算量: $ O(\log x)$
+- $\lfloor \log_2 VALUE \rfloor$ を求めます。
+- ただし、$VALUE = 0$ の場合は未定義です。
+- 計算量: $ O(\log {\log VALUE})$
+- 安全な制約: $VALUE$ は $1$ 以上の `符号あり64bit整数`
+
+### log_floor($BASE$, $VALUE$)
+
+- $\lfloor \log_{BASE} VALUE \rfloor$ を求めます。
+- ただし、$VALUE = 0$ の場合は $0$ を返します。
+- $BASE \leq 1$ の場合はエラーです。
+- 計算量: $ O(\log VALUE)$
+- 安全な制約: $BASE$ は $1$ より大きい `符号なし32bit整数` かつ $VALUE$ は $1$ 以上の `符号なし64bit整数`
