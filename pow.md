@@ -1,7 +1,7 @@
 # [index](index.md) > 指数・対数
 
 ```cpp
-inline long long fast_pow(long long base, unsigned exp) {
+constexpr long long fast_pow(long long base, unsigned exp) {
     if (base != 0 && std::log2(std::abs(base)) * exp >= 63) {
         return (base < 0 && (exp & 1)) ? LONG_LONG_MIN : LONG_LONG_MAX;
     }
@@ -14,7 +14,7 @@ inline long long fast_pow(long long base, unsigned exp) {
     return result;
 }
 
-inline long long root_floor(const long long &value, const unsigned &degree = 2) {
+constexpr long long root_floor(const long long &value, const unsigned &degree = 2) {
     unsigned long long l = 0, r = 1ULL << (62 / std::max(1U, degree) + 1);
     while (r - l > 1) {
         unsigned long long m = (l + r) / 2;
@@ -47,7 +47,7 @@ inline long long root_floor(const long long &value, const unsigned &degree = 2) 
 ```cpp
 constexpr int log2_floor(const unsigned long long &value) { return 63 - std::countl_zero(value); }
 
-inline int log_floor(const unsigned &base, unsigned long long value) {
+constexpr int log_floor(const unsigned &base, unsigned long long value) {
     assert(1 < base);
 
     int res = 0;
