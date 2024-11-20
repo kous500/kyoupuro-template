@@ -1,9 +1,3 @@
-#ifdef ONLINE_JUDGE
-#pragma GCC target("avx2")
-#pragma GCC optimize("O3")
-#pragma GCC optimize("unroll-loops")
-#endif
-
 #include <bits/stdc++.h>
 #include<atcoder/all>
 #define overload4(a, b, c, d, e, ...) e
@@ -59,7 +53,7 @@ using Vb = V<bool>; using VVb = VV<bool>; using VVVb = VVV<bool>;
 using Vd = V<double>; using VVd = VV<double>; using VVVd = VVV<double>;
 
 constexpr int INF = 1e9;
-constexpr ll INF_l = 1e18;
+constexpr ll INF_l = 2e18;
 
 template<typename T> inline std::istream& operator>>(istream& is, vector<T>& v) { for (T& in : v) is >> in; return is; }
 template<typename F, typename S> inline std::istream& operator>>(istream& is, pair<F, S>& p) { is >> p.first >> p.second; return is; }
@@ -70,19 +64,18 @@ template<typename F, typename S> inline std::ostream& operator<<(ostream& os, pa
 inline void print() { cout << '\n'; }
 template<class T> inline void print(T a) { cout << a << '\n'; }
 template<class T, class... Ts> inline void print(const T& a, const Ts&... b) { cout << a; (cout << ... << (cout << ' ', b)); print(); }
-void fprint(double a) { cout << fixed << setprecision(15) << a << '\n'; }
+inline void fprint(double a) { cout << fixed << setprecision(15) << a << '\n'; }
 template<class T> inline void debug2d(VV<T> &v) { for (auto &r : v) rep(i, r.size()) cout << r[i] << (i == (int)r.size() - 1 ? "\n" : ", "); }
 inline void yesno(bool a) { cout << (string)(a ? "Yes\n" : "No\n"); }
 
 template<class... T> constexpr auto MIN(T... a) { return min(initializer_list{a...}); }
 template<class... T> constexpr auto MAX(T... a) { return max(initializer_list{a...}); }
-template<class T> inline bool chmax(T& a, T b) { if (a < b) { a = b; return 1; } return 0; }
-template<class T> inline bool chmin(T& a, T b) { if (a > b) { a = b; return 1; } return 0; }
-template<class T> inline ll sum(V<T> &v) { return accumulate(all(v), 0LL); }
+template<class T> constexpr bool chmax(T& a, T b) { if (a < b) { a = b; return 1; } return 0; }
+template<class T> constexpr bool chmin(T& a, T b) { if (a > b) { a = b; return 1; } return 0; }
+template<class T> constexpr ll sum(V<T> &v) { return accumulate(all(v), 0LL); }
 
 int main() {
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
 
-    
 }
