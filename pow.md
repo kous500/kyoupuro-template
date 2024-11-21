@@ -15,9 +15,11 @@ constexpr long long fast_pow(long long base, unsigned exp) {
 }
 
 constexpr long long root_floor(const long long &value, const unsigned &degree = 2) {
-    unsigned long long l = 0, r = 1ULL << (62 / std::max(1U, degree) + 1);
+    assert(0 <= value);
+    assert(0 < degree);
+    unsigned long long l = 0, r = 1ULL << (62 / degree + 1);
     while (r - l > 1) {
-        unsigned long long m = (l + r) / 2;
+        unsigned long long m = r - (r - l) / 2;
         if (fast_pow(m, degree) <= value) l = m;
         else r = m;
     }
@@ -31,16 +33,15 @@ constexpr long long root_floor(const long long &value, const unsigned &degree = 
 - 結果が `符号あり64bit整数` の範囲を超える場合は、範囲内で最も近い値を返します。
 - $0^0$ の場合は $1$ を返します。
 - 計算量: $ O(\log EXP)$
-- 安全な制約: $BASE$ は `符号あり64bit整数` かつ $EXP$ は `符号なし32bit整数`
+- 制約: $BASE$ は `符号あり64bit整数` かつ $EXP$ は `符号なし32bit整数`
 - 厳格な制約: ${BASE}^{EXP}$ が $0^0$ 以外かつ、 `符号あり64bit整数` の範囲内
 
 ### root_floor($VALUE$, $DEGREE$)
 
 - $\lfloor \sqrt[DEGREE]{VALUE} \rfloor$ を求めます。
-- $VALUE < 0$ の場合は $0$ 、 $DEGREE = 0$ の場合は $0$ または $2^{63}-1$ を返します。
-- 計算量: $ O(\log VALUE \times \log DEGREE)$
-- 安全な制約: $BASE$ は `符号あり64bit整数` かつ $EXP$ は `符号なし32bit整数`
-- 厳格な制約: $0 \leq BASE$ かつ $1 \leq DEGREE$
+- $VALUE < 0$ または $DEGREE = 0$ の場合はエラーです。
+- 計算量: $ O(\log VALUE \div 2^{DEGREE} \times \log DEGREE)$
+- 制約: $VALUE$ は $0$ 以上の `符号あり64bit整数` かつ $DEGREE$ は $1$ 以上の `符号なし32bit整数`
 
 ---
 
@@ -64,7 +65,7 @@ constexpr int log_floor(const unsigned &base, unsigned long long value) {
 - $\lfloor \log_2 VALUE \rfloor$ を求めます。
 - ただし、$VALUE = 0$ の場合は未定義です。
 - 計算量: $ O(\log {\log VALUE})$
-- 安全な制約: $VALUE$ は $1$ 以上の `符号あり64bit整数`
+- 制約: $VALUE$ は $1$ 以上の `符号あり64bit整数`
 
 ### log_floor($BASE$, $VALUE$)
 
@@ -72,4 +73,4 @@ constexpr int log_floor(const unsigned &base, unsigned long long value) {
 - ただし、$VALUE = 0$ の場合は $0$ を返します。
 - $BASE \leq 1$ の場合はエラーです。
 - 計算量: $ O(\log VALUE)$
-- 安全な制約: $BASE$ は $1$ より大きい `符号なし32bit整数` かつ $VALUE$ は $1$ 以上の `符号なし64bit整数`
+- 制約: $BASE$ は $2$ 以上の `符号なし32bit整数` かつ $VALUE$ は $1$ 以上の `符号なし64bit整数`
