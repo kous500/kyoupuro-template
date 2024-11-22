@@ -14,8 +14,12 @@ constexpr long long fast_pow(long long base, unsigned exp) {
             return neg ? LONG_LONG_MIN : LONG_LONG_MAX;
         }
         if (exp & 1) result *= base;
-        exp >>= 1;
-        base *= base;
+        if (exp >>= 1) {
+            if (base != 0 && std::abs(base) > LONG_LONG_MAX / std::abs(base)) {
+                return neg ? LONG_LONG_MIN : LONG_LONG_MAX;
+            }
+            base *= base;
+        }
     }
     return result;
 }
@@ -46,18 +50,24 @@ constexpr unsigned long long root_floor(const unsigned long long &value, const u
         unsigned exp = degree;
         unsigned long long pow = 1, base = m;
         while (true) {
-            if (exp == 0) {
+            if (exp & 1) {
+                if (pow > value / base) {
+                    r = m;
+                    break;
+                }
+                pow *= base;
+            }
+            if (exp >>= 1) {
+                if (base != 0 && base > value / base) {
+                    r = m;
+                    break;
+                }
+                base *= base;
+            } else {
                 if (pow <= value) l = m;
                 else r = m;
                 break;
             }
-            if (pow > ULONG_LONG_MAX / base) {
-                r = m;
-                break;
-            }
-            if (exp & 1) pow *= base;
-            base *= base;
-            exp >>= 1;
         }
     }
     return l;
@@ -66,7 +76,7 @@ constexpr unsigned long long root_floor(const unsigned long long &value, const u
 
 - $\lfloor \sqrt[DEGREE]{VALUE} \rfloor$ を求めます。
 - $DEGREE = 0$ の場合はエラーです。
-- 計算量: $ O(\log VALUE)$
+- 計算量: $ O(\log DEGREE * \log VALUE)$
 - 制約: $VALUE$ は `符号なし64bit整数` かつ $DEGREE$ は $1$ 以上の `符号なし32bit整数`
 
 ## log2_floor($VALUE$)
