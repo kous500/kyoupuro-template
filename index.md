@@ -24,7 +24,7 @@
 - [エラトステネスの篩](eratosthenes.md)
 - [繰り上げ除算](ceildiv.md)
 - [行列](matrix.md)
-- [指数・対数](pow.md)
+- [指数・対数](explog.md)
 
 ## ヒューリスティック
 - [乱数生成](rundom.md)
