@@ -6,14 +6,14 @@
 - 指数テーブルの前計算を行うことで、関数を高速に計算します。
 
 ### 整数パラメータ $LV$
-- $LV$ が大きいほど前計算量とメモリ使用量は減少します。
+- $LV$ が大きいほど前計算時間とメモリ使用量は減少しますが、一部のケースでの関数実行時間は増加します。
 - 制約: $4 \leq LV \leq 6$
-- $LV=4$ の場合、コンストラクタの平均実行時間は数ミリ秒です。 (デフォルト値)
-- $LV=5$ の場合、コンストラクタの平均実行時間は1ミリ秒以下です。( $a^4$, $\sqrt[4] a$ の計算時間が数倍程度増加します。)
-- $LV=6$ の場合、コンストラクタの平均実行時間は非常に短いです。(複数のケースで計算時間が数倍程度増加します。)
+- $LV=4$ の場合、コンストラクタの平均実行時間は `数ミリ秒` です。 (デフォルト値)
+- $LV=5$ の場合、コンストラクタの平均実行時間は `1ミリ秒以下` です。(4乗根などの計算時間が倍程度増加します。)
+- $LV=6$ の場合、コンストラクタの平均実行時間は `非常に短い` です。(4~5乗根などの関数の計算時間が倍程度増加します。)
 
 ```cpp
-template<unsigned LV_ = 4U> class IntegerCalculator {
+template<unsigned LV_ = 4> class IntegerCalculator {
 public:
     typedef long long I_t;
     typedef unsigned long long UI_t;
@@ -26,10 +26,11 @@ public:
     UI_t root_floor(const UI_t &value, const UI_t &degree = 2) const {
         assert(0 < degree);
         if (value == 0) return 0;
+        UI_t l, r;
         if (degree == 1) return value;
-        if (degree == 2) return static_cast<UI_t>(std::sqrt(value));
-        if (degree == 3) return static_cast<UI_t>(std::cbrt(value));
-        UI_t l = 1ULL << log2_floor(value) / degree, r = l << 1;
+        else if (degree == 2) l = static_cast<UI_t>(std::sqrt(value)) - 1, r = l + 2;
+        else if (degree == 3) l = static_cast<UI_t>(std::cbrt(value)) - 1, r = l + 3;
+        else l = 1ULL << log2_floor(value) / degree, r = l << 1;
         while (r - l > 1) {
             UI_t m = (l + r) / 2;
             if (ui_pow(m, degree) <= std::min(value, _UI_MAX - 1)) l = m;
@@ -70,7 +71,7 @@ public:
         return power;
     }
 
-    static constexpr unsigned log2_floor(const UI_t &v) { return _BITS - __builtin_clzll(v) - 1; }
+    static constexpr unsigned log2_floor(const UI_t &v) { return 63 - __builtin_clzll(v); }
 
 private:
     static constexpr size_t _BITS = std::numeric_limits<UI_t>::digits;
@@ -92,7 +93,7 @@ private:
 };
 ```
 
-## i_pow($BASE$, $EXP$)
+### i_pow($BASE$, $EXP$)
 
 - ${BASE}^{EXP}$ を求めます。
 - 結果が `符号あり64bit整数` の範囲を超える場合は、範囲内で最も近い値を返します。
@@ -101,32 +102,107 @@ private:
 - 制約: $BASE$ は `符号あり64bit整数` かつ $EXP$ は `符号なし64bit整数`
 - 厳格な制約: ${BASE}^{EXP}$ が $0^0$ 以外かつ、 `符号あり64bit整数` の範囲内
 
-## ui_pow($BASE$, $EXP$)
+### ui_pow($BASE$, $EXP$)
 
 - ${BASE}^{EXP}$ を求めます。
-- 結果が `符号なし64bit整数` の範囲を超える場合は、範囲内で最も近い値を返します。
+- 結果が `符号なし64bit整数` の範囲を超える場合は、範囲内で最も近い値 ($2^{64}-1$) を返します。
 - $0^0$ の場合は $1$ を返します。
 - 計算量: $ O(1)$
 - 制約: $BASE$ は `符号なし64bit整数` かつ $EXP$ は `符号なし64bit整数`
 - 厳格な制約: ${BASE}^{EXP}$ が $0^0$ 以外かつ、 `符号なし64bit整数` の範囲内
 
-## root_floor($VALUE$, $DEGREE$)
+### root_floor($VALUE$, $DEGREE$)
 
 - $\lfloor \sqrt[DEGREE]{VALUE} \rfloor$ を求めます。
 - $DEGREE = 0$ の場合はエラーです。
 - 計算量: 定数倍の軽い $ O(\log VALUE)$
 - 制約: $VALUE$ は `符号なし64bit整数` かつ $DEGREE$ は $1$ 以上の `符号なし64bit整数`
 
-## log2_floor($VALUE$)
+### log2_floor($VALUE$)
 
 - $\lfloor \log_2 VALUE \rfloor$ を求めます。
 - ただし、$VALUE = 0$ の場合は未定義です。
 - 計算量: $ O(1)$
 - 制約: $VALUE$ は $1$ 以上の `符号なし64bit整数`
 
-## log_floor($BASE$, $VALUE$)
+### log_floor($BASE$, $VALUE$)
 
 - $\lfloor \log_{BASE} VALUE \rfloor$ を求めます。
 - $BASE \leq 1$ または $VALUE = 0$ の場合はエラーです。
 - 計算量: $ O(\log \log VALUE)$
 - 制約: $BASE$ は $2$ 以上の `符号なし64bit整数` かつ $VALUE$ は $1$ 以上の `符号なし64bit整数`
+
+### テストコード
+
+```cpp
+template<unsigned LV_> class IntegerCalculatorTester {
+public:
+    typedef long long I_t;
+    typedef unsigned long long UI_t;
+
+    IntegerCalculatorTester() : _ic() {
+        std::cout << "@ IntegerCalculator <" << LV_ << ">" << std::endl;
+        _test_root_floor();
+        _test_log_floor();
+    }
+
+private:
+    static constexpr I_t _I_MAX = std::numeric_limits<I_t>::max(), _I_MIN = std::numeric_limits<I_t>::min();
+    static constexpr UI_t _UI_MAX = std::numeric_limits<UI_t>::max();
+    const IntegerCalculator<LV_> _ic;
+
+    void _test_root_floor() {
+        int failed = 0;
+
+        // root_floor(a^b±1, b)
+        for (UI_t i = 1; i <= 64; ++i) {
+            for (UI_t j = 0; j < 1ULL << 22; j++) {
+                UI_t pow = _safe_pow(j, i);
+                if (pow == _UI_MAX) continue;
+                failed += _require(_ic.root_floor(pow, i), j, i, "^/", pow);
+                if (2 <= i && 0 < pow) {
+                    failed += _require(_ic.root_floor(pow - 1, i), j - 1, i, "^/", pow - 1);
+                    failed += _require(_ic.root_floor(pow + 1, i), j, i, "^/", pow);
+                }
+            }
+        }
+
+        // max cases
+        failed += _require(_ic.root_floor(_safe_pow(1ULL << 30, 2), 2), 1ULL << 30, 2, "^/", _safe_pow(1ULL << 30, 2));
+        failed += _require(_ic.root_floor(18446744073709551615ULL, 2), 4294967295ULL, 2, "^/", 18446744073709551615ULL);
+        failed += _require(_ic.root_floor(18446744073709551615ULL, 3), 2642245ULL, 3, "^/", 18446744073709551615ULL);
+        failed += _require(_ic.root_floor(18446744073709551615ULL, 4), 65535ULL, 4, "^/", 18446744073709551615ULL);
+        failed += _require(_ic.root_floor(0, _UI_MAX), 0ULL, _UI_MAX, "^/", 0);
+        failed += _require(_ic.root_floor(1, _UI_MAX), 1ULL, _UI_MAX, "^/", 1);
+        failed += _require(_ic.root_floor(2, _UI_MAX), 1ULL, _UI_MAX, "^/", 2);
+        failed += _require(_ic.root_floor(_UI_MAX, _UI_MAX), 1ULL, _UI_MAX, "^/", _UI_MAX);
+
+        std::cout << "failed cases [root_floor]: " << failed << std::endl;
+    }
+
+    void _test_log_floor() {
+        for (UI_t i = 2; i <= 1ULL << 32; i *= 2) {
+            std::cout << "log_" << i << "(18446744073709551615ULL) = " << _ic.log_floor(i, 18446744073709551615ULL) << std::endl;
+        }
+    }
+
+    template<class R, class... A> bool _require(const R &result, const R &expect, A... args) {
+        if (result != expect) {
+            std::cout << "Failed: " << result << " != " << expect;
+            (std::cout << ... << (std::cout << ' ', args));
+            std::cout << std::endl;
+            return true;
+        }
+        return false;
+    }
+
+    UI_t _safe_pow(const UI_t &base, const UI_t &exp) {
+        UI_t power = 1;
+        for (UI_t i = 0; i < exp; ++i) {
+            if (base != 0 && power > _UI_MAX / base) return _UI_MAX;
+            power *= base;
+        }
+        return power;
+    }
+};
+```
