@@ -1,25 +1,18 @@
 # [index](index.md) > 指数・対数
 
-## IntegerCalculator \<LV_\>
+## IntegerCalculator \<LV\>
 
 - 64bit整数用の指数対数計算クラスです。
 - 指数テーブルの前計算を行うことで、関数を高速に計算します。
 
-### 整数パラメータ $LV$
-- $LV$ が大きいほど前計算時間とメモリ使用量は減少しますが、一部のケースでの関数実行時間は増加します。
-- 制約: $4 \leq LV \leq 6$
-- $LV=4$ の場合、コンストラクタの平均実行時間は `数ミリ秒` です。 (デフォルト値)
-- $LV=5$ の場合、コンストラクタの平均実行時間は `1ミリ秒以下` です。(4乗根などの計算時間が倍程度増加します。)
-- $LV=6$ の場合、コンストラクタの平均実行時間は `非常に短い` です。(4~5乗根などの関数の計算時間が倍程度増加します。)
-
 ```cpp
-template<unsigned LV_ = 4> class IntegerCalculator {
+template<unsigned LV = 4> class IntegerCalculator {
 public:
     typedef long long I_t;
     typedef unsigned long long UI_t;
 
     IntegerCalculator() {
-        static_assert(4 <= LV_ && LV_ <= 6, "LV_ must be in [4, 6]");
+        static_assert(4 <= LV && LV <= 6, "LV must be in [4, 6]");
         _precompute_pow();
     }
 
@@ -59,7 +52,7 @@ public:
     }
 
     UI_t ui_pow(const UI_t &base, const UI_t &exp) const {
-        if (LV_ <= exp) {
+        if (LV <= exp) {
             const unsigned safe_exp = std::min(static_cast<UI_t>(_BITS), exp);
             return base < _pow_table[safe_exp].size() ? _pow_table[safe_exp][base] : _UI_MAX;
         }
@@ -81,10 +74,10 @@ private:
     
     void _precompute_pow() {
         _pow_table.resize(_BITS + 1);
-        for (size_t base = 0; base < 1U << (_BITS + LV_ - 1) / LV_; ++base) {
+        for (size_t base = 0; base < 1U << (_BITS + LV - 1) / LV; ++base) {
             UI_t power = 1;
             for (size_t exp = 0; exp <= _BITS; ++exp) {
-                if (exp >= LV_) _pow_table[exp].push_back(power);
+                if (exp >= LV) _pow_table[exp].push_back(power);
                 if (base != 0 && power > _UI_MAX / base) break;
                 power *= base;
             }
@@ -93,12 +86,20 @@ private:
 };
 ```
 
+### 整数パラメータ $LV$
+- $a^b$ を $LV \leq b \leq 64$ の範囲で前計算します。
+- $LV$ が大きいほど前計算時間とメモリ使用量は減少しますが、一部のケースでの関数実行時間は増加します。
+- 制約: $4 \leq LV \leq 6$
+- $LV=4$ の場合、コンストラクタの平均実行時間は `数ミリ秒` です。 (デフォルト値)
+- $LV=5$ の場合、コンストラクタの平均実行時間は `1ミリ秒以下` です。(4乗根などの計算時間が倍程度増加します)
+- $LV=6$ の場合、コンストラクタの平均実行時間は `非常に短い` です。(4~5乗根などの計算時間が倍程度増加します)
+
 ### i_pow($BASE$, $EXP$)
 
 - ${BASE}^{EXP}$ を求めます。
 - 結果が `符号あり64bit整数` の範囲を超える場合は、範囲内で最も近い値を返します。
 - $0^0$ の場合は $1$ を返します。
-- 計算量: $ O(1)$
+- 計算量: $O(1)$
 - 制約: $BASE$ は `符号あり64bit整数` かつ $EXP$ は `符号なし64bit整数`
 - 厳格な制約: ${BASE}^{EXP}$ が $0^0$ 以外かつ、 `符号あり64bit整数` の範囲内
 
@@ -107,7 +108,7 @@ private:
 - ${BASE}^{EXP}$ を求めます。
 - 結果が `符号なし64bit整数` の範囲を超える場合は、範囲内で最も近い値 ($2^{64}-1$) を返します。
 - $0^0$ の場合は $1$ を返します。
-- 計算量: $ O(1)$
+- 計算量: $O(1)$
 - 制約: $BASE$ は `符号なし64bit整数` かつ $EXP$ は `符号なし64bit整数`
 - 厳格な制約: ${BASE}^{EXP}$ が $0^0$ 以外かつ、 `符号なし64bit整数` の範囲内
 
@@ -115,33 +116,33 @@ private:
 
 - $\lfloor \sqrt[DEGREE]{VALUE} \rfloor$ を求めます。
 - $DEGREE = 0$ の場合はエラーです。
-- 計算量: 定数倍の軽い $ O(\log VALUE)$
+- 計算量: 軽めの $O(\log VALUE)$
 - 制約: $VALUE$ は `符号なし64bit整数` かつ $DEGREE$ は $1$ 以上の `符号なし64bit整数`
 
 ### log2_floor($VALUE$)
 
 - $\lfloor \log_2 VALUE \rfloor$ を求めます。
 - ただし、$VALUE = 0$ の場合は未定義です。
-- 計算量: $ O(1)$
+- 計算量: $O(1)$
 - 制約: $VALUE$ は $1$ 以上の `符号なし64bit整数`
 
 ### log_floor($BASE$, $VALUE$)
 
 - $\lfloor \log_{BASE} VALUE \rfloor$ を求めます。
 - $BASE \leq 1$ または $VALUE = 0$ の場合はエラーです。
-- 計算量: $ O(\log \log VALUE)$
+- 計算量: $O(\log \log VALUE)$
 - 制約: $BASE$ は $2$ 以上の `符号なし64bit整数` かつ $VALUE$ は $1$ 以上の `符号なし64bit整数`
 
-### テストコード
+## テストコード
 
 ```cpp
-template<unsigned LV_> class IntegerCalculatorTester {
+template<unsigned LV> class IntegerCalculatorTester {
 public:
     typedef long long I_t;
     typedef unsigned long long UI_t;
 
     IntegerCalculatorTester() : _ic() {
-        std::cout << "@ IntegerCalculator <" << LV_ << ">" << std::endl;
+        std::cout << "@ IntegerCalculator <" << LV << ">" << std::endl;
         _test_root_floor();
         _test_log_floor();
     }
@@ -149,7 +150,7 @@ public:
 private:
     static constexpr I_t _I_MAX = std::numeric_limits<I_t>::max(), _I_MIN = std::numeric_limits<I_t>::min();
     static constexpr UI_t _UI_MAX = std::numeric_limits<UI_t>::max();
-    const IntegerCalculator<LV_> _ic;
+    const IntegerCalculator<LV> _ic;
 
     void _test_root_floor() {
         int failed = 0;
