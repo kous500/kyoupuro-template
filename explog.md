@@ -3,7 +3,7 @@
 ## IntegerCalculator \<LV\>
 
 - 64bit整数用の指数対数計算クラスです。
-- 指数テーブルの前計算を行うことで、関数を高速に計算します。
+- 指数テーブルとlog2テーブルの前計算を行うことで、関数を高速に計算します。
 
 ```cpp
 template<unsigned LV = 4> class IntegerCalculator {
@@ -11,9 +11,10 @@ public:
     typedef long long I_t;
     typedef unsigned long long UI_t;
 
-    IntegerCalculator() {
+    IntegerCalculator() : _dlog2_table(), _pow_table(_BITS + 1) {
         static_assert(4 <= LV && LV <= 6, "LV must be in [4, 6]");
-        _precompute_pow();
+        _init_dlog2_table();
+        _init_pow_table();
     }
 
     UI_t root_floor(const UI_t &value, const UI_t &degree = 2) const {
@@ -33,15 +34,9 @@ public:
     }
 
     unsigned log_floor(const UI_t &base, const UI_t &value) const {
-        assert(1 < base);
-        assert(0 < value);
-        unsigned l = 0, r = log2_floor(value) + 1;
-        while (r - l > 1) {
-            unsigned m = (l + r) / 2;
-            if (ui_pow(base, m) <= std::min(value, _UI_MAX - 1)) l = m;
-            else r = m;
-        }
-        return l;
+        assert(1 < base && 0 < value);
+        const unsigned result = log2_floor(value) / (base < _DLOG2_TABLE_SIZE ? _dlog2_table[base] : log2_floor(base) + 1);
+        return ui_pow(base, result + 1) <= std::min(value, _UI_MAX - 1) ? result + 1 : result;
     }
 
     I_t i_pow(const I_t &base, const UI_t &exp) const {
@@ -70,10 +65,14 @@ private:
     static constexpr size_t _BITS = std::numeric_limits<UI_t>::digits;
     static constexpr I_t _I_MAX = std::numeric_limits<I_t>::max(), _I_MIN = std::numeric_limits<I_t>::min();
     static constexpr UI_t _UI_MAX = std::numeric_limits<UI_t>::max();
+    static constexpr size_t _DLOG2_TABLE_SIZE = 128;
+
+    double _dlog2_table[_DLOG2_TABLE_SIZE];
     std::vector<std::vector<UI_t>> _pow_table;
+
+    void _init_dlog2_table() { for (size_t i = 1; i < _DLOG2_TABLE_SIZE; ++i) _dlog2_table[i] = std::log2(i); }
     
-    void _precompute_pow() {
-        _pow_table.resize(_BITS + 1);
+    void _init_pow_table() {
         for (size_t base = 0; base < 1U << (_BITS + LV - 1) / LV; ++base) {
             UI_t power = 1;
             for (size_t exp = 0; exp <= _BITS; ++exp) {
@@ -116,7 +115,7 @@ private:
 
 - $\lfloor \sqrt[DEGREE]{VALUE} \rfloor$ を求めます。
 - $DEGREE = 0$ の場合はエラーです。
-- 計算量: 軽めの $O(\log VALUE)$
+- 計算量: $O(\log VALUE)$
 - 制約: $VALUE$ は `符号なし64bit整数` かつ $DEGREE$ は $1$ 以上の `符号なし64bit整数`
 
 ### log2_floor($VALUE$)
@@ -130,7 +129,7 @@ private:
 
 - $\lfloor \log_{BASE} VALUE \rfloor$ を求めます。
 - $BASE \leq 1$ または $VALUE = 0$ の場合はエラーです。
-- 計算量: $O(\log \log VALUE)$
+- 計算量: $O(1)$
 - 制約: $BASE$ は $2$ 以上の `符号なし64bit整数` かつ $VALUE$ は $1$ 以上の `符号なし64bit整数`
 
 ## テストコード
