@@ -1,5 +1,10 @@
+#pragma GCC target("avx2")
+#pragma GCC optimize("O3")
+#pragma GCC optimize("unroll-loops")
+
 #include <bits/stdc++.h>
 #include<atcoder/all>
+
 #define overload4(a, b, c, d, e, ...) e
 #define rep1(a) for (int i = 0; i < (int)(a); i++)
 #define rep2(i, a) for (int i = 0; i < (int)(a); i++)
@@ -28,7 +33,6 @@
 #define VVC(v, n, m) VVc v(n, Vc(m)); input(v)
 #define VVB(v, n, m) VVb v(n, Vb(m)); input(v)
 #define VVD(v, n, m) VVd v(n, Vd(m)); input(v)
-
 #define all(i) begin(i),end(i)
 #define rall(i) rbegin(i),rend(i)
 #define REF [&]
