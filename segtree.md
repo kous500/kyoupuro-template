@@ -1,6 +1,6 @@
 # [index](index.md) > セグ木
 
-## テンプレート
+## セグメント木テンプレート
 
 ```cpp
 ll op_min(ll a, ll b) { return min(a, b); }
@@ -15,6 +15,12 @@ using segtree_min = segtree<ll, op_min, e_inf>;
 using segtree_max = segtree<ll, op_max, e_minf>;
 using segtree_sum = segtree<ll, op_sum, e_0>;
 using segtree_mul = segtree<ll, op_sum, e_1>;
+```
+
+## 遅延セグメント木テンプレート
+
+```cpp
+// 初期化必須
 
 // 区間Max 区間加算
 ll op(ll a, ll b) { return max(a, b); }
@@ -23,6 +29,7 @@ ll mapping(ll f, ll x) { return f + x; }
 ll composition(ll f, ll g) { return f + g; }
 ll id() { return 0; }
 using lseg = lazy_segtree<ll, op, e, ll, mapping, composition, id>;
+lseg seg(Vl(n, 0));
 
 // 区間Max 区間更新
 ll op(ll a, ll b) { return max(a, b); }
@@ -31,6 +38,7 @@ ll mapping(ll f, ll x) { return f != -INF_l ? f : x; }
 ll composition(ll f, ll g) { return g != -INF_l ? g : f }; 
 ll id() { return -INF_l; }
 using lseg = lazy_segtree<ll, op, e, ll, mapping, composition, id>;
+lseg seg(Vl(n, 0));
 
 // 区間Min 区間加算
 ll op(ll a, ll b) { return min(a, b); }
@@ -39,6 +47,7 @@ ll mapping(ll f, ll x) { return f + x; }
 ll composition(ll f, ll g) { return f + g; }
 ll id() { return 0; }
 using lseg = lazy_segtree<ll, op, e, ll, mapping, composition, id>;
+lseg seg(Vl(n, 0));
 
 // 区間Min 区間更新
 ll op(ll a, ll b) { return min(a, b); }
@@ -47,25 +56,78 @@ ll mapping(ll f, ll x) { return f != -INF_l ? f : x; }
 ll composition(ll f, ll g) { return g != -INF_l ? g : f }; 
 ll id() { return -INF_l; }
 using lseg = lazy_segtree<ll, op, e, ll, mapping, composition, id>;
+lseg seg(Vl(n, 0));
 
 // 区間和 区間加算
-// S: {Value, Range}, {0, 1} で初期化必須
+// S: {Value, Range}
 pair<ll, int> op(pair<ll, int> a, pair<ll, int> b) { return {a.first + b.first, a.second + b.second}; }
 pair<ll, int> e() { return {0, 0}; }
 pair<ll, int> mapping(ll f, pair<ll, int> x) { return {x.first + f * x.second, x.second}; }
 ll composition(ll f, ll g) { return f + g; }
 ll id() { return 0; }
 using lseg = lazy_segtree<pair<ll, int>, op, e, ll, mapping, composition, id>;
+lseg seg(V<pair<ll, int>(n, {0, 1}));
 
 // 区間和 区間更新
-// S: {Value, Range}, {0, 1} で初期化必須
+// S: {Value, Range}
 pair<ll, int> op(pair<ll, int> a, pair<ll, int> b) { return {a.first + b.first, a.second + b.second}; }
 pair<ll, int> e() { return {0, 0}; }
 pair<ll, int> mapping(ll f, pair<ll, int> x) { return {f != -INF_l ? f * x.second : x.first, x.second}; }
 ll composition(ll f, ll g) { return g != -INF_l ? g : f; }
 ll id() { return -INF_l; }
 using lseg = lazy_segtree<pair<ll, int>, op, e, ll, mapping, composition, id>;
+lseg seg(V<pair<ll, int>(n, {0, 1}));
 ```
+
+## 多種演算用セグメント木
+
+```cpp
+class Mfsg {
+    struct S {
+        long long max, min, sum;
+        int range;
+        S() : max(0), min(0), sum(0), range(1) {}
+        S(long long val) : max(val), min(val), sum(val), range(1) {}
+        S(long long max, long long min, long long sum, long long range) : max(max), min(min), sum(sum), range(range) {}
+    };
+    struct F {
+        int op; // 0: do nothing, 1: set, 2: add
+        long long val;
+        F() : op(0), val(0) {}
+        F(int op = 0, long long val = 0) : op(op), val(val) {}
+    };
+    static S op(S a, S b) { return S(std::max(a.max, b.max), std::min(a.min, b.min), a.sum + b.sum, a.range + b.range); }
+    static S e() { return S(LLONG_MIN, LLONG_MAX, 0, 0); }
+    static S mapping(F f, S x) { return f.op == 0 ? x : f.op == 1 ? S(f.val, f.val, f.val * x.range, x.range) : S(x.max + f.val, x.min + f.val, x.sum + f.val * x.range, x.range); }
+    static F composition(F f, F g) { return f.op == 0 ? g : f.op == 1 ? f : g.op == 0 ? f : F(g.op, f.val + g.val); }
+    static F id() { return F(0, 0); }
+
+    lazy_segtree<S, op, e, F, mapping, composition, id> seg;
+
+public:
+    Mfsg(int n) : seg(vector<S>(n)) {}
+    Mfsg(int n, long long val) : seg(vector<S>(n, S(val))) {}
+
+    void set(int p, long long val) { seg.set(p, S(val)); }
+    void set(int l, int r, long long val) { seg.apply(l, r, F(1, val)); }
+    void add(int p, long long val) { seg.apply(p, F(2, val)); }
+    void add(int l, int r, long long val) { seg.apply(l, r, F(2, val)); }
+    long long get(int pos) { return seg.get(pos).sum; }
+    long long max() { return seg.all_prod().max; }
+    long long max(int l, int r) { return seg.prod(l, r).max; }
+    long long min() { return seg.all_prod().min; }
+    long long min(int l, int r) { return seg.prod(l, r).min; }
+    long long sum() { return seg.all_prod().sum; }
+    long long sum(int l, int r) { return seg.prod(l, r).sum; }
+};
+```
+
+## ACLの説明
+
+- [Segtree](#segtree)
+- [Lazy-Segtree](#lazy-segtree)
+
+---
 
 # Segtree
 
