@@ -30,7 +30,7 @@ template<class T> inline VV<T> matrixpow(VV<T> a, ll n) {
 
 $
 \quad x_{n+1}=ax_n+bx_n\\
-\quad y_{n+1}=ay_n+by_n\\
+\quad y_{n+1}=cy_n+dy_n\\
 $
 
 このときの状態ベクトル $v_n$ を次のように定義します。
